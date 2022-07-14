@@ -1,13 +1,19 @@
-# This is a sample Python script.
+import logging
 
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
+from stacks.stacks_linked_list import Stack
 
-from common.has_pair_with_sum import has_pair_with_sum_3, unsorted_array_1, unsorted_array_2
+logger = logging.getLogger(name=__name__)
 
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print(has_pair_with_sum_3(unsorted_array_1, 6))
-    print(has_pair_with_sum_3(unsorted_array_2, 15))
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    try:
+        stack = Stack()
+        stack.push(1)
+        stack.push(2)
+        stack.push(3)
+        stack.push(4)
+        stack.push(5)
+        print(stack)
+        stack.pop()
+        stack.print_stack()
+    except Exception as ex:
+        logger.error(str(ex), exc_info=True)
