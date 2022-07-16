@@ -1,4 +1,4 @@
-class Node:
+class DoubleNode:
     def __init__(self, data):
         self.data = data
         self.next = None
@@ -18,7 +18,7 @@ class DoublyLinkedList:
         return str(self.__dict__)
 
     def append(self, data):
-        new_node = Node(data)
+        new_node = DoubleNode(data)
         if self.head is None:
             self.head = new_node
             self.tail = self.head
@@ -29,7 +29,7 @@ class DoublyLinkedList:
         self.length += 1
 
     def prepend(self, data):
-        new_node = Node(data)
+        new_node = DoubleNode(data)
         if self.head is None:
             self.head = new_node
             self.tail = self.head
@@ -55,7 +55,7 @@ class DoublyLinkedList:
         if index == 0:
             return self.prepend(data)
 
-        new_node = Node(data)
+        new_node = DoubleNode(data)
         preceding_node = self.get_node_at_index(index - 1)
         succeeding_node = preceding_node.next
         preceding_node.next = new_node
