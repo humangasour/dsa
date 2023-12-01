@@ -57,3 +57,6 @@ def merge_sorted_arrays_2(arr_1: list[int], arr_2: list[int]) -> list[int]:
         logger.error(str(ex))
     except Exception as ex:
         logger.error(str(ex), exc_info=True)
+
+# time complexity - O(n+m)
+# space complexity - O(n+m)

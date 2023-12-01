@@ -2,7 +2,7 @@ array1 = ['a', 'b', 'c', 'd', 1]
 array2 = ['i', 'y', 'z', 1]
 
 
-def contains_common_item(arr1: list, arr2: list):
+def contains_common_item(arr1: list, arr2: list) -> bool:
     for i, _ in enumerate(arr1):
         for j, _ in enumerate(arr2):
             if arr1[i] == arr2[j]:
@@ -29,4 +29,11 @@ def contains_common_item_2(arr1: list, arr2: list) -> bool:
 # space complexity - O(a)
 
 
-print(contains_common_item_2(array1, array2))
+def contains_common_item_3(arr1: list, arr2: list) -> bool:
+    return bool(set(arr1) & set(arr2))
+
+# time complexity - O(a + b)
+# space complexity - O(a + b)
+
+
+print(contains_common_item_3(array1, array2))

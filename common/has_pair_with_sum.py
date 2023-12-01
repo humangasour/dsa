@@ -11,7 +11,7 @@ array2 = [1, 2, 5, 7]  # 12
 
 def has_pair_with_sum(arr: list, total: int) -> bool:
     # if arrays are sorted
-    # we can loop through every index and pair it with every other index to see if the some matches
+    # we can loop through every index and pair it with every other index to see if the sum matches
     for i, num in enumerate(arr):
         for j, other_num in enumerate(arr[i + 1:]):
             if num + other_num == total:
@@ -42,7 +42,7 @@ def has_pair_with_sum_2(arr: list[int], total: int) -> bool:
     return False
 
 # time complexity - O(n)
-# space complexity - O(n)
+# space complexity - O(1)
 
 
 unsorted_array_1 = [3, 1, 2, 6]  # 6
@@ -51,7 +51,7 @@ unsorted_array_2 = [6, 7, 1, 4, 8]  # 15
 
 def has_pair_with_sum_3(arr: list[int], total: int) -> bool:
     # arrays are not sorted this time
-    # loop through every value and save it's complement in a set
+    # loop through every value and save its complement in a set
     # check if the set has a value equal to the current value in loop
     # return true if yes
     # return false if not

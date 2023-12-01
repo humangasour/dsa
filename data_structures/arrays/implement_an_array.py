@@ -38,6 +38,13 @@ class MyArray(object):
             logger.error(str({ex}), exc_info=True)
 
     def __shift_items(self, index: int):
+        """
+        shifts back one place all the items from index to the last index
+        :param index:
+        :type index:
+        :return:
+        :rtype:
+        """
         try:
             for i in range(index, self.length - 1):
                 self.data[i] = self.data[i+1]
