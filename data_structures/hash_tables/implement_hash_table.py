@@ -1,79 +1,131 @@
-from typing import List
+from typing import List, Union, Any
+
+INITIAL_BUCKET_SIZE = 19
 
 
-class Hashtable:
+class HashTable:
+    bucket_size: int
+    hashmap: List
+
     def __init__(self):
         """
-        Create an array(self.mydict) with a bucket size - which is derived from the load factor.
-        The Load factor is a measure that decides when to increase the HashMap capacity to maintain the get() and put() operation complexity of O(1).
-        The default load factor of HashMap is 0.75f (75% of the map size).
-        Load Factor = (n/k)
-        where n is the number of max number of elements that can be stored dict
-        k is the bucket size
-        Optimal Load factor is around (2/3) such that the effect of hash collisions is minimum
-        """
-        self.bucket = 16
-        self.hashmap = [[] for i in range(self.bucket)]
+        Initialize a new HashTable instance and create the array for the hash table which has its length equal to a pre-decided prime number
 
-    def __str__(self):
-        return str(self.__dict__)
-
-    def hash(self, key):
-        return len(key) % self.bucket
-
-    def put(self, key, value):
+        Returns:
+            None
         """
-        value may already be present
+        self.bucket_size = INITIAL_BUCKET_SIZE
+        self.hashmap = [None] * self.bucket_size
+
+    def _hash(self, key: str) -> int:
         """
-        hash_value = self.hash(key)
-        reference = self.hashmap[hash_value]
-        for i in range(len(reference)):
-            if reference[i][0] == key:
-                reference[i][1] = value
-                return None
-        reference.append([key, value])
+        Returns the index for the key value to be stored at
+
+        Args:
+            key (str): A string representing the key to store
+
+        Returns:
+            int: Index of the hashmap to store the key value pair at
+        """
+        return len(key) % self.bucket_size
+
+    def set(self, key: Union[str, int], value: Any):
+        """
+        Stores the key value pair in the hashmap
+
+        Args:
+            key (Union[str, int]): A string or an integer representing the key
+            value (any): Value to be stored for the given key
+
+        Raises:
+            ValueError: If the key is None or an empty string
+            TypeError: If the key is neither a string not an int
+        """
+        if not key:
+            raise ValueError('key must not be None or empty.')
+
+        if not isinstance(key, (str, int)):
+            raise TypeError('key must be an instance of str or int.')
+
+        index = self._hash(key)
+
+        # Initialize the bucket if it's None
+        if self.hashmap[index] is None:
+            self.hashmap[index] = []
+
+        # Check if key already exists in the hashmap, overwrite if yes
+        for i, (existing_key, _) in enumerate(self.hashmap[index]):
+            if existing_key == key:
+                self.hashmap[index][i] = (key, value)
+                return
+
+        # If the key does not exist, append the new key-value pair
+        self.hashmap.append((key, value))
+
+    def get(self, key: Union[str, int]) -> Union[Any, None]:
+        """
+        Retrieves the value associated with the key from the hashmap.
+
+        Args:
+            key (Union[str, int]): The key to be retrieved.
+
+        Returns:
+            Union[Any, None]: The value associated with the key, or None if the key is not found.
+        """
+        if not key:
+            raise ValueError('key must not be None or empty.')
+
+        if not isinstance(key, (str, int)):
+            raise TypeError('key must be an instance of str or int.')
+
+        index = self._hash(key)
+
+        if self.hashmap[index] is None:
+            return None
+
+        for existing_key, value in self.hashmap[index]:
+            if existing_key == key:
+                return value
+
         return None
 
-    def get(self, key):
+    def remove(self, key: Union[str, int]) -> bool:
         """
-        Returns the value to which the specified key is mapped, or -1 if this map contains no mapping for the key
-        """
-        hash_value = self.hash(key)
-        reference = self.hashmap[hash_value]
-        for i in range(len(reference)):
-            if reference[i][0] == key:
-                return reference[i][1]
-        return -1
+        Removes the key-value pair associated with the key from the hashmap.
 
-    def remove(self, key):
-        """
-        Removes the mapping of the specified value key if this map contains a mapping for the key
-        """
-        hash_value = self.hash(key)
-        reference = self.hashmap[hash_value]
-        for i in range(len(reference)):
-            if reference[i][0] == key:
-                reference.pop(i)
-                return None
-        return None
+        Args:
+            key (Union[str, int]): The key of the pair to be removed.
 
-    def get_keys(self) -> List[str]:
+        Returns:
+            bool: True if the pair was removed, False if the key was not found.
         """
-        Returns the list of all the keys from the hashtable
-        :return:
-        :rtype:
+        if not key:
+            raise ValueError('key must not be None or empty.')
+
+        if not isinstance(key, (str, int)):
+            raise TypeError('key must be an instance of str or int.')
+
+        index = self._hash(key)
+
+        if self.hashmap[index] is None:
+            return False
+
+        for i, (existing_key, _) in enumerate(self.hashmap[index]):
+            if existing_key == key:
+                del self.hashmap[index][i]
+                return True
+
+        return False
+
+    def keys(self) -> List[Union[str, int]]:
         """
-        if len(self.hashmap) == 0:
-            return []
+        Returns a list of all the keys in the hashmap.
 
-        result = []
-
-        for _, i_data_cell in enumerate(self.hashmap):
-            if i_data_cell and len(i_data_cell):
-                if len(i_data_cell) > 1:
-                    for _, j_data_cell in enumerate(i_data_cell):
-                        result.append(j_data_cell[0])
-                else:
-                    result.append(i_data_cell[0][0])
-
-        return result
+        Returns:
+            List[Union[str, int]]: A list of all the keys in the hashmap.
+        """
+        key_list = []
+        for bucket in self.hashmap:
+            if bucket is not None:
+                key_list.extend([key for key, _ in bucket])
+        return key_list

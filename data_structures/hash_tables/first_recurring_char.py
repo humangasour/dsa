@@ -1,32 +1,35 @@
 from typing import List, Union
 
 
-def first_recurring_char(arr: List[int]) -> Union[int, None]:
-    # [2, 5, 1, 2, 3, 1, 5, 4, 2, 8] -> 2
-    # [2, 1, 1, 2, 3, 5, 1, 2, 4] -> 1
-    # [2, 3, 4, 5] -> None
-    if len(arr) < 2:
+def first_recurring_char(chars: List[Union[str, int]]) -> Union[str, int, None]:
+    """
+    Returns the first recurring character from the list of characters, returns None if there is no such character
+
+    Args:
+        chars (List[Union[str, int]]): List of characters represented as strings or integers
+
+    Returns:
+        Union[str, int, None]: First recurring character or None if there is no such character
+    """
+    if not chars:
+        raise ValueError("No characters")
+
+    if not all(isinstance(char, (str, int)) for char in chars):
+        raise TypeError("All characters must be either string or int")
+
+    if len(chars) < 1:
         return None
 
-    items = set()
-    for i, item in enumerate(arr):
-        if item in items:
-            return item
-        items.add(item)
+    char_set = set()
+
+    for char in chars:
+        if char in char_set:
+            return char
+        char_set.add(char)
+
     return None
 
 
-def naive_first_recurring_char(arr: List[int]) -> Union[int, None]:
-    # [2, 5, 1, 5, 2, 3, 1, 5, 4, 2, 8] -> 5
-    if len(arr) < 2:
-        return None
-
-    length = len(arr)
-    result = None
-    for i in range(length):
-        for j in range(i + 1, length):
-            if arr[i] == arr[j]:
-                length = j
-                result = arr[j]
-
-    return result
+print(first_recurring_char([""]))
+print(first_recurring_char(['a', 'b', 'a', 'c']))
+print(first_recurring_char(['a', 'b', 'b', 'c']))
