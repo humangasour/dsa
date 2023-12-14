@@ -1,0 +1,198 @@
+from typing import Any, Optional
+
+
+class Node:
+    """
+    A node in a linked list.
+
+    Attributes:
+        value (Any): The value stored in the node.
+        next (Optional[Node]): The reference to the next node in the linked list, or None if this is the last node.
+    """
+
+    def __init__(self, value: Any):
+        """
+        Initialize a Node with a given value.
+
+        Args:
+            value (Any): The value to be stored in the node.
+        """
+        self.value = value
+        self.next: Optional[Node] = None
+
+    def __str__(self) -> str:
+        """
+        Create a string representation of the node.
+
+        Returns:
+            str: A string representing the node and its link to the next node.
+        """
+        return f"Node({self.value}) -> {('Node(' + str(self.next.value) + ')' if self.next else 'None')}"
+
+
+class LinkedList:
+    """
+    A singly linked list data structure.
+
+    Attributes:
+        head (Optional[Node]): The first node in the linked list, or None if the list is empty.
+        tail (Optional[Node]): The last node in the linked list, or None if the list is empty.
+        length (int): The number of nodes in the linked list.
+    """
+
+    def __init__(self, value: Any):
+        """
+        Initialize a LinkedList with a single node.
+
+        Args:
+            value (Any): The value for the initial node in the linked list.
+        """
+        initial_node = Node(value)
+        self.head = initial_node
+        self.tail = initial_node
+        self.length = 1
+
+    def __str__(self) -> str:
+        """
+        Create a string representation of the linked list.
+
+        Returns:
+            str: A string representing the linked list.
+        """
+        node_values = []
+        current_node = self.head
+        while current_node:
+            node_values.append(str(current_node.value))
+            current_node = current_node.next
+        return ' -> '.join(node_values)
+
+    def append(self, value: Any):
+        """
+        Append a new node with the given value to the end of the linked list.
+
+        Args:
+            value (Any): The value for the new node to be appended.
+        """
+        new_node = Node(value)
+        self.tail.next = new_node
+        self.tail = new_node
+        self.length += 1
+        print(self)
+
+    def prepend(self, value: Any):
+        """
+        Prepend a new node with the given value to the start of the linked list.
+
+        Args:
+            value (Any): The value for the new node to be prepended.
+        """
+        new_node = Node(value)
+        new_node.next = self.head
+        self.head = new_node
+        self.length += 1
+        print(self)
+
+    def insert(self, index: int, value: int):
+        """
+        Insert a new node with the given value at the specified index in the linked list.
+
+        Args:
+            index (int): The index before which the new node will be inserted.
+            value (Any): The value of the new node to be inserted.
+
+        Raises:
+            TypeError: If the index is not an integer.
+            ValueError: If the index is out of the bounds of the linked list.
+        """
+        if not isinstance(index, int) or index < 0:
+            raise TypeError('The index must be a non-negative integer')
+
+        if index >= self.length:
+            raise ValueError('Index should be less than the length of the linked list')
+
+        new_node = Node(value)
+        if index == 0:
+            new_node.next = self.head
+            self.head = new_node
+        else:
+            node_at_index = self._get_node(index - 1)
+            new_node.next = node_at_index.next
+            node_at_index.next = new_node
+
+        if index == self.length:
+            self.tail = new_node
+
+        self.length += 1
+        print(self)
+
+    def remove(self, index: int):
+        """
+        Remove the node at the given index from the linked list.
+
+        This method updates the connections within the list to exclude the node at the specified index.
+        Special cases are handled for removing the head or the tail of the list.
+
+        Args:
+            index (int): The index of the node to be removed.
+
+        Raises:
+            ValueError: If the index is not a non-negative integer or if it is out of the bounds of the linked list.
+        """
+        if not isinstance(index, int):
+            raise TypeError('The index must be an integer')
+
+        if index >= self.length or index < 0:
+            raise ValueError('Index should be less than or equal to the length of the linked list and it should be non-negative')
+
+        if index == 0:
+            self.head = self.head.next
+            if index == self.length - 1:
+                self.tail = None
+        else:
+            node_at_previous_index = self._get_node(index - 1)
+            node_to_remove = node_at_previous_index.next
+            node_at_previous_index.next = node_to_remove.next
+            if index == self.length - 1:
+                self.tail = node_at_previous_index
+
+        self.length -= 1
+        print(self)
+
+    def get(self, index: int) -> Any:
+        """
+        Get the value of the node at the given index in the linked list.
+
+        Args:
+            index (int): The index of the node whose value is to be retrieved.
+
+        Returns:
+            Any: The value of the node at the given index.
+
+        Raises:
+            TypeError: If the index is not an integer.
+            ValueError: If the index is out of the bounds of the linked list.
+        """
+        if not isinstance(index, int) or index < 0:
+            raise TypeError('The index must be a non-negative integer')
+
+        if index >= self.length:
+            raise ValueError('Index should be less than the length of the linked list')
+
+        node = self._get_node(index)
+        return node.value
+
+    def _get_node(self, index: int) -> Node:
+        """
+        Get the node at the given index in the linked list.
+
+        Args:
+            index (int): The index of the node to be retrieved.
+
+        Returns:
+            Node: The node at the given index.
+        """
+        node = self.head
+        for i in range(index):
+            node = node.next
+        return node
+
