@@ -181,6 +181,40 @@ class LinkedList:
         node = self._get_node(index)
         return node.value
 
+    def reverse(self):
+        """
+        Reverse the linked list in place.
+
+        This method reverses the linked list by iteratively traversing the list and reversing the direction
+        of the 'next' pointers of each node. The head and tail of the list are swapped at the end of the operation.
+
+        After reversal, the original head becomes the tail and vice versa. The method handles edge cases
+        where the list is empty or contains a single node by simply returning without making any changes.
+
+        Note:
+            This method modifies the list in place and does not create a new list.
+
+        Example:
+            Given a list: A -> B -> C -> None
+            After reversal, the list will be: C -> B -> A -> None
+        """
+        if self.length < 2:
+            return
+
+        previous_node = None
+        current_node = self.head
+
+        while current_node is not None:
+            next_node = current_node.next
+            current_node.next = previous_node
+            previous_node = current_node
+            current_node = next_node
+
+        # Swap head and tail
+        self.head, self.tail = self.tail, self.head
+        self.tail.next = None
+        print(self)
+
     def _get_node(self, index: int) -> Node:
         """
         Get the node at the given index in the linked list.
